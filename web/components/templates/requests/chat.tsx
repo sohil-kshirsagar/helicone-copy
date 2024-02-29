@@ -53,21 +53,26 @@ export const SingleChat = (props: {
     const calculateContentHeight = () => {
       const current = textContainerRef.current;
       if (current) {
-        const lineHeight = 1.5 * 16; // Assuming 1.5rem line-height and 16px font-size
-        const maxContentHeight = lineHeight * 7; // For 7 lines of text
+        const lineHeight = parseInt(window.getComputedStyle(current).lineHeight);
+        const linesToShow = 7; // Number of lines to show before truncating
+        const maxContentHeight = lineHeight * linesToShow;
         setShowButton(current.scrollHeight > maxContentHeight);
       }
     };
 
-    const interval = setInterval(() => {
-      calculateContentHeight();
-    }, 10);
+    calculateContentHeight();
+    window.addEventListener('resize', calculateContentHeight);
 
-    return () => clearInterval(interval);
-  }, []);
+    return () => {
+      window.removeEventListener('resize', calculateContentHeight);
+    };
+  }, [textContainerRef]);
 
   const handleToggle = () => {
     setExpanded(!expanded);
+    if (!expanded) {
+      setShowButton(false);
+    }
   };
 
   const isAssistant = message.role === "assistant";
@@ -262,9 +267,8 @@ export const SingleChat = (props: {
                 ref={textContainerRef}
                 className={clsx(
                   !expanded && showButton ? "truncate-text" : "",
-                  "leading-6 pb-2"
+                  "leading-6"
                 )}
-                style={{ maxHeight: expanded ? "none" : "10.5rem" }}
               >
                 {/* render the string or stringify the array/object */}
                 <RenderWithPrettyInputKeys

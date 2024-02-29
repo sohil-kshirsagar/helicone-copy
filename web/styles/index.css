@@ -18,30 +18,25 @@
 }
 
 .truncate-text {
-  position: relative;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  max-width: 100%;
 }
 
 .truncate-text::after {
-  content: "";
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 4.5rem;
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #f9fafb
-  ); /* Fades from transparent to gray-50 */
+  display: none;
 }
 
 .dark .truncate-text::after {
-  background: linear-gradient(
-    to bottom,
-    transparent,
-    #17191d /* Dark mode background color */
-  );
+  /* This pseudo-element is no longer necessary due to updated truncation styles */
+}
+
+@media (max-width: 1440px) {
+  .truncate-text {
+    max-width: calc(100% - 2rem); /* Adjust the value based on the layout testing */
+  }
 }
 
 @media (hover: hover) {
