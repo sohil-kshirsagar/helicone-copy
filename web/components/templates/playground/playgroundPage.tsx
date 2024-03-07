@@ -40,7 +40,7 @@ const PlaygroundPage = (props: PlaygroundPageProps) => {
     singleRequest !== null ? [singleRequest.model] : []
   );
   const [temperature, setTemperature] = useState<number>(
-    reqBody !== null ? reqBody.temperature : 0.7
+    reqBody !== null && typeof reqBody.temperature === 'number' && !isNaN(reqBody.temperature) ? reqBody.temperature : 0.7
   );
   const [maxTokens, setMaxTokens] = useState<number>(
     reqBody !== null ? reqBody.max_tokens : 256
@@ -173,19 +173,19 @@ const PlaygroundPage = (props: PlaygroundPageProps) => {
                           value={temperature}
                           onChange={(e) => {
                             const value = parseFloat(e.target.value);
-                            if (value < 0.01) {
-                              setTemperature(0.01);
+                            if (value < 0) {
+                              setTemperature(0);
                               return;
                             }
                             if (value > 1.99) {
                               setTemperature(1.99);
                               return;
                             }
-                            setTemperature(parseFloat(e.target.value));
+                            setTemperature(value);
                           }}
-                          min={0}
-                          max={1}
-                          step={0.01}
+                          min="0"
+                          max="1.99"
+                          step="0.01"
                           className="w-16 text-sm px-2 py-1 rounded-lg border border-gray-500"
                         />
                       </div>
@@ -193,21 +193,21 @@ const PlaygroundPage = (props: PlaygroundPageProps) => {
                         type="range"
                         id="temp-range"
                         name="temp-range"
-                        min={0}
-                        max={1.99}
-                        step={0.01}
+                        min="0"
+                        max="1.99"
+                        step="0.01"
                         value={temperature}
                         onChange={(e) => {
                           const value = parseFloat(e.target.value);
-                          if (value < 0.01) {
-                            setTemperature(0.01);
+                          if (value < 0) {
+                            setTemperature(0);
                             return;
                           }
                           if (value > 1.99) {
                             setTemperature(1.99);
                             return;
                           }
-                          setTemperature(parseFloat(e.target.value));
+                          setTemperature(value);
                         }}
                         className="text-black"
                         style={{
